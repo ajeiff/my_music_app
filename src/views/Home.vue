@@ -147,20 +147,22 @@ export default {
 
     setup(){
 
-//        var audios = ref([
-//            {"name": "Peaches", "file": "https://test-jeiffer-projet.s3.eu-west-3.amazonaws.com/Jeison+-+Peaches.wav", "artist": "Jeison", "howl": null}
-//            ]);
+        var myHeaders = new Headers();
+        myHeaders.append("Access-Control-Allow-Origin", "*")
 
-      var audios = ref([
-        axios
-          .get('https://ssmv0koo50.execute-api.eu-west-3.amazonaws.com/default/get_song_from_bucket')
-          .then(response => (this.info = response.data.bpi))
-          ]);
+        var myInit = { method: 'GET',
+                       headers: myHeaders,
+                       mode: 'cors',
+                       cache: 'default' };
 
-//        var audios = ref([
-//            httpGet('https://ssmv0koo50.execute-api.eu-west-3.amazonaws.com/default/get_song_from_bucket')
-//            ]);
-        //audios.forEach((item) => item.file = httpGet(item.file));
+        var audiosInput = ref([
+            fetch('https://jvvbivfisl.execute-api.eu-west-3.amazonaws.com/api/get_song_from_bucket', myInit)
+            .then(response => console.log(response))
+            .catch(error => console.log(error))
+        ]);
+
+
+        //console.log("Hello world" + JSON.parse(audiosInput.value[ref(0).value]));
 
         const step =  ref(0);
         const nextButton = ref(true);
@@ -168,6 +170,10 @@ export default {
         const random = ref(false);
         const repeat = ref(false);
         const index = ref(0);
+        const audioValueIndex = JSON.parse(audiosInput.value[index.value]);
+        const audios = ref([
+            audioValueIndex
+        ]);
         const duration = ref('00:00');
         const timer = ref('00:00');
         const pauseTrack = ref(false);
@@ -417,7 +423,7 @@ export default {
             play,pause,duration,formatTime,audios,pauseTrack,next,previous,
             index,timer,step,stepFunction,seek,selectSound,state,random,repeat,
             progress,volume,volBar,volumeProgress,sliderBtn,mute,mutePlayer,
-            sliderBtnVol,nextButton,prevButton, httpGet
+            sliderBtnVol,nextButton,prevButton
         }
     }
 }
