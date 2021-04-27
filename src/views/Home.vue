@@ -21,18 +21,18 @@
                     <svg @click="random = !random" :class="random ? 'text-red-500':''" class="w-8 h-8 cursor-pointer" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M6.59 12.83L4.4 15c-.58.58-1.59 1-2.4 1H0v-2h2c.29 0 .8-.2 1-.41l2.17-2.18 1.42 1.42zM16 4V1l4 4-4 4V6h-2c-.29 0-.8.2-1 .41l-2.17 2.18L9.4 7.17 11.6 5c.58-.58 1.59-1 2.41-1h2zm0 10v-3l4 4-4 4v-3h-2c-.82 0-1.83-.42-2.41-1l-8.6-8.59C2.8 6.21 2.3 6 2 6H0V4h2c.82 0 1.83.42 2.41 1l8.6 8.59c.2.2.7.41.99.41h2z"/></svg>
                 </div>
                 <div class="text-grey-darker hover:bg-gray-300 rounded-full p-1">
-                    <svg @click="prevButton ? previous() : ''" class="w-8 h-8 cursor-pointer" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M4 5h3v10H4V5zm12 0v10l-9-5 9-5z"/></svg>
+                    <svg @click="prevButton ? previous : ''" class="w-8 h-8 cursor-pointer" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M4 5h3v10H4V5zm12 0v10l-9-5 9-5z"/></svg>
                 </div>
                 <div class="text-white p-4 rounded-full bg-gradient-to-r from-red-500 via-red-600 to-red-700 shadow-lg">
-                    <svg v-if="!pauseTrack" @click="play()" class="w-8 h-8 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg v-if="!pauseTrack" @click="play" class="w-8 h-8 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <svg v-else @click="pause()" class="w-8 h-8 cursor-pointer" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5 4h3v12H5V4zm7 0h3v12h-3V4z"/></svg>
+                    <svg v-else @click="pause" class="w-8 h-8 cursor-pointer" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5 4h3v12H5V4zm7 0h3v12h-3V4z"/></svg>
                     
                 </div>
                 <div class="text-grey-darker hover:bg-gray-300 rounded-full p-1">
-                    <svg @click="nextButton ? next() : ''" class="w-8 h-8 cursor-pointer" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 5h3v10h-3V5zM4 5l9 5-9 5V5z"/></svg>
+                    <svg @click="nextButton ? next : ''" class="w-8 h-8 cursor-pointer" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 5h3v10h-3V5zM4 5l9 5-9 5V5z"/></svg>
                 </div>
                 <div class="text-grey-darker hover:bg-gray-300 rounded-full p-1">
                     <svg  @click="repeat = !repeat" :class="repeat ? 'text-red-500':''" class="w-8 h-8 cursor-pointer" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5 4a2 2 0 0 0-2 2v6H0l4 4 4-4H5V6h7l2-2H5zm10 4h-3l4-4 4 4h-3v6a2 2 0 0 1-2 2H6l2-2h7V8z"/></svg>
@@ -99,7 +99,7 @@
             </div>
             
             <div class="w-1/5 flex md:w-2/12 m-auto items-center">
-                <div class="w-3/12 md:w-2/12 hover:bg-gray-500 rounded-full md:p-1" @click="mute()">
+                <div class="w-3/12 md:w-2/12 hover:bg-gray-500 rounded-full md:p-1" @click="mute">
                      
                     <svg v-if="mutePlayer" class="w-6 h-6 m-auto text-red-500 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd" />
@@ -136,44 +136,35 @@ import {ref,reactive,computed} from 'vue';
 
 import { Howl, Howler } from 'howler';
 
+    async function getDict(){
+    console.log("GetDict");
+    var rep = await fetch('https://kymuvqgv84.execute-api.eu-west-3.amazonaws.com/api/');
+    console.log("GetDict 2");
+    var response = await rep.json();
+    console.log("GetDict 3");
+    //console.log(response);
+    //var body = JSON.parse(response);
+    //console.log(body);
+    //console.log(response['body']);
+    return JSON.parse(response['body']);
+    }
+
 export default {
 
-    mounted(){ 
-      var sound = this.audios[this.index].howl;
-      
+    mounted(){
+        var sound = this.audios[this.index].howl;
         var barWidth = (0.9 * 100) / 100;
         this.sliderBtnVol = (this.volBar.offsetWidth * barWidth + this.volBar.offsetWidth * 0.05 - 25);
     },
 
-    setup(){
-
-        var myHeaders = new Headers();
-        myHeaders.append("Access-Control-Allow-Origin", "*")
-
-        var myInit = { method: 'GET',
-                       headers: myHeaders,
-                       mode: 'cors',
-                       cache: 'default' };
-
-        var audiosInput = ref([
-            fetch('https://jvvbivfisl.execute-api.eu-west-3.amazonaws.com/api/get_song_from_bucket', myInit)
-            .then(response => console.log(response))
-            .catch(error => console.log(error))
-        ]);
-
-
-        //console.log("Hello world" + JSON.parse(audiosInput.value[ref(0).value]));
-
+    async setup(){
+        console.log("setup");
         const step =  ref(0);
         const nextButton = ref(true);
         const prevButton = ref(true);
         const random = ref(false);
         const repeat = ref(false);
         const index = ref(0);
-        const audioValueIndex = JSON.parse(audiosInput.value[index.value]);
-        const audios = ref([
-            audioValueIndex
-        ]);
         const duration = ref('00:00');
         const timer = ref('00:00');
         const pauseTrack = ref(false);
@@ -185,17 +176,27 @@ export default {
         const mutePlayer = ref(false);
         const state = reactive({
             audioPlaying: []
-        })
-        function formatTime(secs) {
+        });
+
+        console.log("onBeforeCreate and Create");
+        const audiosInput = await getDict();
+        console.log(audiosInput);
+        const audios = ref([
+                audiosInput
+            ]);
+        console.log(audios);
+
+
+        const formatTime = async (secs) => {
             var minutes = Math.floor(secs / 60) || 0;
             var seconds = Math.floor(secs - minutes * 60) || 0;
-
             return (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-        }
-        function play(){
+        };
 
+
+
+        const play = async () => {
             var sound;
-            
             var audio = audios.value[index.value];
             if (audio.howl) {
                 sound = audio.howl
@@ -206,226 +207,175 @@ export default {
                 html5: true, // A live stream can only be played through HTML5 Audio.
                 format: ['mp3', 'aac'],
                 onplay: function(){
-
-                    pauseTrack.value = true; 
+                    pauseTrack.value = true;
                     nextButton.value = true;
                     prevButton.value = true;
                     duration.value = formatTime(sound.duration());
                     requestAnimationFrame(stepFunction.bind(this));
-                    
                 },
                 onpause: function(){
-
                     pauseTrack.value = false;
-                    
                 },
                 onend: function() {
-                    
                     next();
                 },
                 onseek: function(){
-
                   window.requestAnimationFrame(stepFunction.bind(this));
-                  
-
                 }
                 });
             }
-
-            
             sound.play();
-
             state.audioPlaying[index.value] = true;
             files();
-            
-        }
-        function pause(indexo){
-            
+        };
+
+
+
+
+        const pause = async (indexo) => {
             var audio = audios.value[index.value].howl;
 
             if (audio) {
 
                 audio.pause();
-                pauseTrack.value = false; 
-                state.audioPlaying[index.value] = false;   
+                pauseTrack.value = false;
+                state.audioPlaying[index.value] = false;
             }
-            
-        }
+        };
 
-        function stepFunction(){
-            
+
+
+        const stepFunction = async () => {
             var sound = audios.value[index.value].howl;
             var seek = sound.seek();
-            timer.value = formatTime(Math.round(seek)); 
+            timer.value = formatTime(Math.round(seek));
             step.value = (seek * 100) / sound.duration();
-            
             sliderBtn.value = (progress.value.offsetWidth * (step.value/100) + progress.value.offsetWidth * 0.05 - 25);
-            
             if (sound.playing()) {
-
                 window.requestAnimationFrame(stepFunction.bind(this));
-
             }
-    
-        }
+        };
 
-        function seek(event){
 
-            var per =  event.offsetX / progress.value.clientWidth; 
-            
+
+        const seek = async (event) => {
+            var per =  event.offsetX / progress.value.clientWidth;
             var sound = audios.value[index.value].howl;
-            
             if (sound) {
                 if (sound.playing()) {
                     sound.pause();
                     sound.seek(sound.duration() * per);
                     var barWidth = (per * 100) / 100;
                     sliderBtn.value = (progress.value.offsetWidth * barWidth + progress.value.offsetWidth * 0.05 - 25);
-                    sound.play();  
+                    sound.play();
                 }else{
-                    
                     sound.seek(sound.duration() * per);
                     var barWidth = (per * 100) / 100;
                     sliderBtn.value = (progress.value.offsetWidth * barWidth + progress.value.offsetWidth * 0.05 - 25);
                 }
-                
-                
             }
-        }
+        };
 
-        function next() {
 
+
+
+        const next = async () => {
             nextButton.value = false;
             var audio = audios.value[index.value].howl;
-            
             state.audioPlaying[index.value] = false;
-
             mutePlayer.value ? mutePlayer.value = false : '';
             audio && audio.mute(true) ?  audio.mute(false) : '';
-            
-            
             if ( audio && audios.value.length - 1 ==  index.value) {
                 audio.stop();
-
                 repeat.value ? index.value = index.value
-
                 :
                 random.value ? index.value = Math.floor(Math.random() * audios.value.length)
-                  
                 : index.value = 0
-                
-                 
-            }else{    
-                                
+            }else{
                 if (audio) {
-
                     audio.stop();
-                    
                 }
-
                 repeat.value ? index.value = index.value
                 :
-                random.value ? index.value = Math.floor(Math.random() * audios.value.length) 
-                :  
-                index.value ++; 
-                
-                
+                random.value ? index.value = Math.floor(Math.random() * audios.value.length)
+                :
+                index.value ++;
             }
-
-            
-
             play();
+        };
 
-            
-        }    
 
-        function previous() {
 
+
+        const previous = async () => {
             var audio = audios.value[index.value].howl;
             prevButton.value = false;
             state.audioPlaying[index.value] = false;
-
             mutePlayer.value ? mutePlayer.value = false : '';
             audio && audio.mute(true) ?  audio.mute(false) : '';
-
             if (!audio) {
-           
                 index.value = audios.value.length - 1;
-                 
             }else if (audio && index.value == 0) {
                 audio.stop();
-
                 repeat.value ? index.value = index.value
-
                 :
                 random.value ? index.value = Math.floor(Math.random() * audios.value.length)
-                  
-                : index.value = audios.value.length - 1;              
-            } 
-            else if(audio){    
-                            
-                
-
+                : index.value = audios.value.length - 1;
+            }
+            else if(audio){
                 audio.stop();
-                
                 repeat.value ? index.value = index.value
-
                 :
                 random.value ? index.value = Math.floor(Math.random() * audios.value.length)
-                  
                 : index.value --;
-                
-                
-            } 
-            
-           
-
+            }
             play();
-        }
-        function selectSound(indexSelected) {
+        };
 
+
+
+
+        const selectSound = async (indexSelected) =>  {
             var audio = audios.value[index.value].howl;
-            
             if (audio) {
                 audio.stop();
                 state.audioPlaying[index.value] = false;
             }
-
             index.value = indexSelected;
-            
             play();
-            
-        }
+        };
 
-        function volume(event){
-    
+
+
+        const volume = async (event) => {
             var per = event.layerX / parseFloat(volBar.value.scrollWidth);
             var barWidth = (per * 100) / 100;
             volumeProgress.value = barWidth * 100;
             sliderBtnVol.value = (volBar.value.offsetWidth * barWidth + volBar.value.offsetWidth * 0.05 - 25);
             Howler.volume(per);
+        };
 
-        }
 
-        function mute() {
-            
+
+        const mute = async () => {
             var audio = audios.value[index.value].howl;
-            
             if (audio) {
                mutePlayer.value  = !mutePlayer.value;
-               
                mutePlayer.value ? audio.mute(true) : audio.mute(false)
             }
-            
+        };
+
+        console.log("end setup");
+
+        return {
+                play,pause,duration,formatTime,pauseTrack,next,previous,
+                index,timer,step,stepFunction,seek,selectSound,state,random,repeat,
+                progress,volume,volBar,volumeProgress,sliderBtn,mute,mutePlayer,
+                sliderBtnVol,nextButton,prevButton
+            }
+
         }
-        
-        return{
-            play,pause,duration,formatTime,audios,pauseTrack,next,previous,
-            index,timer,step,stepFunction,seek,selectSound,state,random,repeat,
-            progress,volume,volBar,volumeProgress,sliderBtn,mute,mutePlayer,
-            sliderBtnVol,nextButton,prevButton
-        }
-    }
+
 }
 </script>
 
